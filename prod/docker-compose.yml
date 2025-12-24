@@ -1,0 +1,79 @@
+services:
+  database:
+    container_name: acs-website-database-prod
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - ./databasepg:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d acs-website"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - acs-prod-network
+
+  servers:
+    container_name: acs-website-server-prod
+    image: ghcr.io/narutchai01/acs-be:v0.4.2
+    restart: unless-stopped
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      PORT: ${PORT}
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_KEY: ${SUPABASE_KEY}
+      SUPABASE_BUCKET: ${SUPABASE_BUCKET}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USER: ${MAIL_USER}
+      MAIL_PASS: ${MAIL_PASS}
+      MAIL_FROM: ${MAIL_FROM}
+      SKIP_MIGRATE: ${SKIP_MIGRATE}
+      RUN_SEED: ${RUN_SEED}
+      APP_DOMAIN: ${APP_DOMAIN}
+      NODE_ENV: production
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost:${PORT}/api/v1/health || exit 1",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - acs-prod-network
+      - gateway-nginx
+
+  portal:
+    container_name: acs-website-portal-prod
+    image: ghcr.io/narutchai01/acs-fe:v3.0.3
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    environment:
+      API_URL: ${API_URL}
+      NODE_ENV: production
+      PORT: ${APP_PORT}
+    depends_on:
+      servers:
+        condition: service_healthy
+    networks:
+      - gateway-nginx
+
+networks:
+  acs-prod-network:
+    driver: bridge
+  gateway-nginx:
+    external: true
