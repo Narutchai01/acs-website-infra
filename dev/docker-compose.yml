@@ -75,7 +75,7 @@ services:
       - gateway-nginx
 
 networks:
-  acs-sit-network:
+  acs-dev-network:
     driver: bridge
   gateway-nginx:
     external: true
