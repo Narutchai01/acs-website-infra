@@ -1,8 +1,10 @@
 services:
   database:
-    container_name: acs-website-database-prod
+    container_name: acs-website-database-sit
     image: postgres:18
     restart: unless-stopped
+    ports:
+      - "5436:5432"
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -15,10 +17,10 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - acs-prod-network
+      - acs-sit-network
 
   servers:
-    container_name: acs-website-server-prod
+    container_name: acs-website-server-sit
     image: ghcr.io/narutchai01/acs-be:v0.4.3
     restart: unless-stopped
     ports:
@@ -39,7 +41,7 @@ services:
       SKIP_MIGRATE: ${SKIP_MIGRATE}
       RUN_SEED: ${RUN_SEED}
       APP_DOMAIN: ${APP_DOMAIN}
-      NODE_ENV: production
+      NODE_ENV: development
     depends_on:
       database:
         condition: service_healthy
@@ -53,18 +55,18 @@ services:
       timeout: 10s
       retries: 5
     networks:
-      - acs-prod-network
+      - acs-sit-network
       - gateway-nginx
 
   portal:
-    container_name: acs-website-portal-prod
+    container_name: acs-website-portal-sit
     image: ghcr.io/narutchai01/acs-fe:v3.0.4
     restart: unless-stopped
     ports:
       - "${APP_PORT}:${APP_PORT}"
     environment:
       API_URL: ${API_URL}
-      NODE_ENV: production
+      NODE_ENV: development
       PORT: ${APP_PORT}
     depends_on:
       servers:
@@ -73,7 +75,7 @@ services:
       - gateway-nginx
 
 networks:
-  acs-prod-network:
+  acs-sit-network:
     driver: bridge
   gateway-nginx:
     external: true
