@@ -1,6 +1,6 @@
 services:
   database:
-    container_name: acs-website-database-sit
+    container_name: acs-website-database-dev
     image: postgres:18
     restart: unless-stopped
     ports:
@@ -17,10 +17,10 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - acs-sit-network
+      - acs-dev-network
 
   servers:
-    container_name: acs-website-server-sit
+    container_name: acs-website-server-dev
     image: ghcr.io/narutchai01/acs-be:v0.4.3
     restart: unless-stopped
     ports:
@@ -55,11 +55,11 @@ services:
       timeout: 10s
       retries: 5
     networks:
-      - acs-sit-network
+      - acs-dev-network
       - gateway-nginx
 
   portal:
-    container_name: acs-website-portal-sit
+    container_name: acs-website-portal-dev
     image: ghcr.io/narutchai01/acs-fe:v3.0.4
     restart: unless-stopped
     ports:
