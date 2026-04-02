@@ -64,12 +64,12 @@ services:
     ports:
       - "${PORTAL_PORT}:${PORTAL_PORT}"
     environment:
-      API_URL: ${API_URL}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
       NODE_ENV: PRODUCTION
       PORT: ${PORTAL_PORT}
-    # depends_on:
-    #   servers:
-    #     condition: service_healthy
+    depends_on:
+      servers:
+        condition: service_healthy
     # networks:
     #   - gateway-nginx
 
