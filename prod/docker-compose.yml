@@ -70,7 +70,8 @@ services:
     depends_on:
       servers:
         condition: service_healthy
-    # networks:
+    networks:
+      - acs-prod-network
     #   - gateway-nginx
 
 networks:
