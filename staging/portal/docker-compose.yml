@@ -6,7 +6,7 @@ services:
     environment:
       API_URL: ${API_URL}
       NODE_ENV: staging
-      PORT: ${PORTAL_PORT}
+      # PORT: ${PORTAL_PORT}
     # depends_on:
     #   servers:
     #     condition: service_healthy
