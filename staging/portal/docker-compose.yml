@@ -1,0 +1,12 @@
+services:
+  portal:
+    container_name: acs-website-portal-staging
+    image: ghcr.io/asc-base/acs-portal:v3.3.0
+    restart: unless-stopped
+    environment:
+      API_URL: ${API_URL}
+      NODE_ENV: staging
+      PORT: ${PORTAL_PORT}
+    # depends_on:
+    #   servers:
+    #     condition: service_healthy
