@@ -1,7 +1,7 @@
 services:
   portal:
     container_name: acs-website-portal-staging
-    image: ghcr.io/asc-base/acs-portal:v3.3.0
+    image: ghcr.io/asc-base/acs-portal:staging-245e75a1e2ad8456236d2e0e1cb4e5d6d0771f7e
     restart: unless-stopped
     environment:
       API_URL: ${API_URL}
