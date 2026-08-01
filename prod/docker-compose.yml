@@ -20,7 +20,7 @@ services:
   servers:
     container_name: acs-website-server-prod
     image: ghcr.io/asc-base/acs-core-service:1.3.1
-    # restart: unless-stopped
+    restart: unless-stopped
     ports:
       - "${APP_PORT}:${APP_PORT}"
     environment:
@@ -43,18 +43,18 @@ services:
       JWT_EXPIRATION_HOURS: ${JWT_EXPIRATION_HOURS}
       SKIP_MIGRATE: ${SKIP_MIGRATE}
       RUN_SEED: ${RUN_SEED}
-    # depends_on:
-    #   database:
-    #     condition: service_healthy
-    # healthcheck:
-    #   test:
-    #     [
-    #       "CMD-SHELL",
-    #       "curl -f http://localhost:${APP_PORT}/api/v1/health || exit 1",
-    #     ]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 5
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost:${APP_PORT}/api/v1/health || exit 1",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     networks:
       - acs-prod-network
       # - gateway-nginx
