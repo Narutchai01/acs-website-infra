@@ -43,6 +43,7 @@ services:
       JWT_EXPIRATION_HOURS: ${JWT_EXPIRATION_HOURS}
       SKIP_MIGRATE: ${SKIP_MIGRATE}
       RUN_SEED: ${RUN_SEED}
+      ALLOW_ORIGIN: ${ALLOW_ORIGIN
     depends_on:
       database:
         condition: service_healthy
