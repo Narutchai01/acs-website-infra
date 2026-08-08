@@ -1,6 +1,8 @@
 services:
   database:
+    container_name: acs-website-database-prod
     image: postgres:18
+    restart: unless-stopped
 
     environment:
       POSTGRES_USER: ${DB_USER}
@@ -8,7 +10,7 @@ services:
       POSTGRES_DB: ${DB_NAME}
 
     volumes:
-      - acs-postgres-data:/var/lib/postgresql
+      - ./databasepg:/var/lib/postgresql
 
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
@@ -18,14 +20,6 @@ services:
 
     networks:
       - acs-prod-network
-
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: any
-
-volumes:
-  acs-postgres-data:
 
 networks:
   acs-prod-network:
