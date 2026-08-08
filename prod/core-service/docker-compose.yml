@@ -1,0 +1,28 @@
+services:
+  servers:
+    platform: linux/amd64
+    container_name: acs-core-service-prod
+    image: ghcr.io/asc-base/acs-core-service:staging-61ff477b296e05ee15005e500b80e12bf0e6535f
+    restart: unless-stopped
+    environment:
+      APP_PORT: ${APP_PORT}
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_KEY: ${SUPABASE_KEY}
+      SUPABASE_BUCKET: ${SUPABASE_BUCKET}
+      DATABASE_URL: ${DATABASE_URL}
+      HTTPONLY: ${HTTPONLY}
+      SECURE: ${SECURE}
+      ENVIRONMENT: prod
+      APP_HOST: ${APP_HOST}
+      SECRET_JWT: ${SECRET_JWT}
+      JWT_EXPIRATION_HOURS: ${JWT_EXPIRATION_HOURS}
+      ALLOW_ORIGIN: ${ALLOW_ORIGIN}
+      SKIP_MIGRATE: ${SKIP_MIGRATE}
+      RUN_SEED: ${RUN_SEED}
+    networks:
+      - acs-prod-network
+
+networks:
+  acs-prod-network:
+    external: true
+    name: acs-prod-network

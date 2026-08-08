@@ -1,0 +1,21 @@
+services:
+  portal:
+    container_name: acs-website-portal-prod
+    image: ghcr.io/asc-base/acs-portal:v3.6.0
+    restart: unless-stopped
+    ports:
+      - "${PORTAL_PORT}:${PORTAL_PORT}"
+    environment:
+      API_URL: ${API_URL}
+      NODE_ENV: PRODUCTION
+      PORT: ${PORTAL_PORT}
+    # depends_on:
+    #   servers:
+    #     condition: service_healthy
+    networks:
+      - acs-prod-network
+
+networks:
+  acs-prod-network:
+    external: true
+    name: acs-prod-network
