@@ -1,22 +1,32 @@
 services:
   database:
-    container_name: acs-website-database-prod
     image: postgres:18
-    restart: unless-stopped
+
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+
     volumes:
-      - ./databasepg:/var/lib/postgresql
+      - postgres-data:/var/lib/postgresql
+
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin -d ${DB_NAME}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
       timeout: 5s
       retries: 5
+
     networks:
       - acs-prod-network
 
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+
+volumes:
+  postgres-data:
+
 networks:
   acs-prod-network:
-    driver: bridge
+    external: true
